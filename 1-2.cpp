@@ -14,7 +14,7 @@ using namespace std;
 •	в зависимости от задания создать одну или несколько функций для обработки массивов, которые передавать туда через указатели;
 •	организация циклов с использованием указателей, а не с помощью A[i];
 
-В массиве размера N, заполненного случ.числами от 0 до 10, подсчитать количество элементов, встречающихся более одного раза.*/
+В массиве размера N, заполненного случ.числами от 0 до 10, определить максимальную длину последовательности равных элементов.*/
 
 #pragma region randRange
 const int MIN_RAND=0;
@@ -67,37 +67,41 @@ void createArrPointers(T** arrPointers, T *arrSource, int N)
 }
 
 template <typename T>
-int quantityOfRepeatingElements(T *p, int N)
+int maxSequenceRepeated(T *p, int N)
 {
 	int sum=0;
 	T** arrPointers= new T* [N];
 	createArrPointers(arrPointers, p, N);	
 	T** ptr_end=arrPointers+N;
 	T valueCheck=0;
+	int maxSequence=0;
 
 	for(T** q=arrPointers; q<ptr_end-1; q++)//last element doesn't matter, if previous was checked
 	{
 		if(*q) valueCheck=**q;
 		else continue;
-		bool init=false;
 		for(T** r=q+1; r<ptr_end; r++)
 		{				
 			if(*r!=0&&**r==valueCheck)
 			{
 				*r=0;
-				if(!init) sum++;//init - to increment only for unique element being repeated
-				init=true;
+				sum++;
+			}
+			else
+			{
+				if(sum>maxSequence) maxSequence=sum;
+				sum=0;
 			}
 		}
 	}
 
 	delete []arrPointers;
 
-	return sum;
+	return maxSequence;
 }
 
 
-void sameElementsDialog()
+void maxSequenceRepeatedDialog()
 {
 	int N=-1;
 	while(N<1)
@@ -109,7 +113,7 @@ void sameElementsDialog()
 	int *arr= new int[N];
 	initArray(arr, N);
 	printArray(arr, N);
-	cout<<"Total quantity of repeating elements is "<<quantityOfRepeatingElements(arr, N);
+	cout<<"Maximal sequence of repeating elements has length of "<<maxSequenceRepeated(arr, N);
 	delete []arr;
 }
 
@@ -119,7 +123,7 @@ int main()
 		
 	while(1)
 	{
-		sameElementsDialog();
+		maxSequenceRepeatedDialog();
 
 		char q=0;
 		cout<<"\nEnter q - to quit: ";
